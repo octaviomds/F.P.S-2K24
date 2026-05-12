@@ -1,58 +1,152 @@
+# Intégration Firebase dans un projet Unity
 
+Guide d'intégration du SDK Firebase dans un projet Unity, de la création du projet Firebase jusqu'à l'initialisation dans le code.
 
+---
 
-ENREGISTRER L APPLICATION SUR FIREBASE:
+## Prerequis
 
-Vous pouvez enregistrer une ou plusieurs applications ou jeux pour vous connecter à votre projet Firebase.
+- Unity 2021 LTS ou version ulterieure
+- Plateformes Apple uniquement :
+  - Xcode 16.2 ou version ulterieure
+  - CocoaPods 1.12.0 ou version ulterieure
+- Cibles de build minimales :
+  - iOS 15 ou version ulterieure
+  - tvOS 15 ou version ulterieure
+  - Android API niveau 23 (Marshmallow) ou version ulterieure
+- Un compte Google pour acceder a la console Firebase
 
-Si vous publiez votre jeu à la fois sur iOS et Android, enregistrez les deux cibles de build de votre projet Unity avec le même projet Firebase . Si vous disposez de plusieurs variantes de build avec différents ID de bundle iOS ou ID d'application Android définis, vous devez enregistrer chaque variante avec le même projet Firebase.
-Accédez à la console Firebase .
-Au centre de la page de présentation du projet, cliquez sur l'icône Unity ( plat_unity ) pour lancer le workflow de configuration.
+---
 
+## Etape 1 - Creer un projet Firebase
 
-Si vous avez déjà ajouté une application à votre projet Firebase, cliquez sur Ajouter une application pour afficher les options de la plateforme.
-Sélectionnez la cible de build de votre projet Unity que vous souhaitez enregistrer, ou vous pouvez même choisir d'enregistrer les deux cibles maintenant en même temps.
+1. Rendez-vous sur [console.firebase.google.com](https://console.firebase.google.com)
+2. Cliquez sur "Ajouter un projet" et suivez les etapes de configuration
+3. Une fois le projet cree, vous arrivez sur le tableau de bord du projet
 
+---
 
-Remarque : Si vous enregistrez maintenant une seule cible de build de votre projet Unity, vous pourrez toujours revenir au workflow de configuration ultérieurement pour 
-enregistrer l'autre cible de build.
-Saisissez le(s) ID spécifique(s) à la plateforme de votre projet Unity.
+## Etape 2 - Enregistrer votre application
 
+1. Depuis le tableau de bord, cliquez sur l'icone Unity pour demarrer le workflow de configuration
+2. Selectionnez la ou les cibles de build a enregistrer (iOS, Android, ou les deux)
+3. Renseignez les identifiants specifiques a chaque plateforme :
+   - iOS : ID de bundle (exemple : `com.studio.nomjeu`)
+   - Android : nom du package (exemple : `com.studio.nomjeu`)
+4. Cliquez sur "Enregistrer l'application"
 
-Pour iOS : saisissez l'ID iOS de votre projet Unity dans le champ ID du bundle iOS .
-Pour Android : saisissez l'ID Android de votre projet Unity dans le champ Nom du package Android .
-Les termes nom de package et ID d’application sont souvent utilisés de manière interchangeable.
- Où trouvez-vous l'ID de votre projet Unity ?
- 
+> Si vous publiez sur iOS et Android, enregistrez les deux cibles dans le meme projet Firebase. Si vous avez plusieurs variantes de build avec des identifiants differents, chacune doit etre enregistree separement.
 
-Assurez-vous de saisir l'ID que votre projet utilise réellement. La valeur de l'ID est sensible à la casse et elle ne peut pas être modifiée pour ces applications Firebase une fois qu'elles sont enregistrées dans votre projet Firebase.
-(Facultatif) Saisissez le(s) surnom(s) spécifique(s) à la plateforme de votre projet Unity.
-Ces surnoms sont des identifiants internes pratiques et ne sont visibles que par vous dans la console Firebase.
-Cliquez sur Enregistrer l'application .
+---
 
+## Etape 3 - Ajouter les fichiers de configuration
 
-Étape 3 : Ajouter les fichiers de configuration Firebase
+1. Telechargez les fichiers de configuration depuis la console Firebase :
+   - iOS : `GoogleService-Info.plist`
+   - Android : `google-services.json`
+2. Dans Unity, ouvrez la fenetre "Project"
+3. Glissez-deposez les fichiers dans le dossier `Assets/`
 
+---
 
-Obtenez vos fichiers de configuration Firebase spécifiques à la plate-forme dans le workflow de configuration de la console Firebase.
+## Etape 4 - Importer le SDK Firebase Unity
 
+1. Telechargez le SDK Firebase Unity depuis la console Firebase (ou depuis [firebase.google.com/docs/unity](https://firebase.google.com/docs/unity))
+2. Decompressez l'archive a l'emplacement de votre choix
+3. Dans Unity, allez dans `Assets > Import Package > Custom Package`
+4. Selectionnez les packages correspondant aux produits Firebase utilises :
 
-Si vous enregistrez à la fois une cible de build iOS et Android de votre projet Unity, vous devrez télécharger et ajouter les fichiers de configuration pour les deux plates-formes.
-Pour iOS : cliquez sur Télécharger GoogleService-Info.plist .
-Pour Android : cliquez sur Télécharger google-services.json .
- Que devez-vous savoir sur ce fichier de configuration ?
- 
+| Produit Firebase         | Package a importer                  |
+|--------------------------|-------------------------------------|
+| Google Analytics         | `FirebaseAnalytics.unitypackage`    |
+| Authentication           | `FirebaseAuth.unitypackage`         |
+| Realtime Database        | `FirebaseDatabase.unitypackage`     |
+| Firestore                | `FirebaseFirestore.unitypackage`    |
+| Cloud Messaging (FCM)    | `FirebaseMessaging.unitypackage`    |
+| Remote Config            | `FirebaseRemoteConfig.unitypackage` |
+| Storage                  | `FirebaseStorage.unitypackage`      |
 
-Ouvrez la fenêtre Projet de votre projet Unity, puis déplacez votre ou vos fichiers de configuration dans le dossier Assets .
-De retour dans la console Firebase, dans le workflow de configuration, cliquez sur Suivant .
-Étape 4 : ajouter des SDK Firebase Unity
+5. Dans la fenetre "Import Unity Package", cliquez sur "Import"
 
+> Pour iOS : ne desactivez pas le swizzling de methode. Il est requis par le SDK, notamment pour la gestion des jetons FCM.
 
-Remarque : Le flux de travail de configuration suivant est recommandé pour les nouveaux utilisateurs du SDK Unity. Pour des cas d'utilisation particuliers, Firebase propose des flux de configuration alternatifs .
-Dans la console Firebase, cliquez sur Télécharger le SDK Firebase Unity , puis décompressez le SDK dans un endroit pratique.
+---
 
+## Etape 5 - Verifier Google Play Services (Android uniquement)
 
-Vous pouvez télécharger à nouveau le SDK Firebase Unity à tout moment.
-Le SDK Firebase Unity n'est pas spécifique à la plate-forme.
-Dans votre projet Unity ouvert, accédez à Assets > Import Package > Custom Package .
-Dans le SDK décompressé, sélectionnez les produits Firebase pris en charge que vous souhaitez utiliser dans votre application.
+Certains produits Firebase pour Android necessitent que Google Play Services soit a jour. Ajoutez le code suivant au demarrage de votre application pour verifier et corriger les dependances si necessaire.
+
+```csharp
+using Firebase.Extensions;
+
+Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+{
+    var dependencyStatus = task.Result;
+
+    if (dependencyStatus == Firebase.DependencyStatus.Available)
+    {
+        // Firebase est pret a etre utilise
+        var app = Firebase.FirebaseApp.DefaultInstance;
+        // Initialisez vos services Firebase ici
+    }
+    else
+    {
+        UnityEngine.Debug.LogError(
+            string.Format("Impossible de resoudre les dependances Firebase : {0}", dependencyStatus)
+        );
+        // Le SDK Firebase ne peut pas etre utilise dans cet etat
+    }
+});
+```
+
+---
+
+## Configuration Desktop (Beta)
+
+Le SDK Firebase Unity peut egalement s'executer sous Windows, macOS, Linux et dans l'editeur Unity, ce qui facilite les tests en cours de developpement.
+
+### Mise en place
+
+Suivez les memes etapes que pour une plateforme mobile. Firebase detecte automatiquement le fichier de configuration mobile (`GoogleService-Info.plist` ou `google-services.json`) et genere un fichier de configuration desktop (`google-services-desktop.json`) dans le dossier `StreamingAssets/`.
+
+### Mode Edition Unity
+
+Le SDK peut aussi s'executer en mode Edition. Dans ce cas, n'utilisez pas l'instance par defaut de `FirebaseApp` pour eviter les conflits. Creez une instance nommee :
+
+```csharp
+// Ne pas faire en mode Edition :
+// var app = Firebase.FirebaseApp.DefaultInstance;
+
+// Faire a la place :
+var app = Firebase.FirebaseApp.Create(options, "nom-unique-editeur");
+```
+
+> Attention : la compatibilite desktop est une fonctionnalite beta reservee au developpement. Ne l'utilisez pas en production.
+
+---
+
+## Structure du projet recommandee
+
+```
+Assets/
+  Firebase/                       -- Fichiers du SDK Firebase (generes a l'import)
+  GoogleService-Info.plist        -- Configuration iOS
+  google-services.json            -- Configuration Android
+  Scripts/
+    Firebase/
+      FirebaseManager.cs          -- Initialisation et gestion Firebase
+      AuthManager.cs              -- Gestion de l'authentification
+      DatabaseManager.cs          -- Acces a la base de donnees
+  StreamingAssets/
+    google-services-desktop.json  -- Configuration desktop (generee automatiquement)
+```
+
+---
+
+## Ressources
+
+- [Documentation officielle Firebase pour Unity](https://firebase.google.com/docs/unity/setup)
+- [Console Firebase](https://console.firebase.google.com)
+- [Exemple de jeu MechaHamster (GitHub)](https://github.com/google/mechahamster)
+- [Depannage et FAQ Unity](https://firebase.google.com/docs/unity/troubleshooting-faq)
+- [Produits Firebase compatibles avec le SDK Unity](https://firebase.google.com/docs/unity/setup#available-libraries)
